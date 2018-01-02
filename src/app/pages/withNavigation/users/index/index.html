@@ -1,0 +1,57 @@
+<div class="main-body">
+  <el-row :gutter="10">
+    <el-col  :xs="24" :sm="24" :md="8" :lg="8">
+      <h1 class="pageTitle"><i class="fa fa-users" aria-hidden="true"></i>Users</h1>
+    </el-col>
+    <el-col  :xs="24" :sm="24" :md="16" :lg="16">
+      <div class="listOptions pull-right">
+        <el-button  @click.prevent="openFormCreate" size="small"><span class="fa fa-sign-out"></span>Create User</el-button>
+      </div>
+    </el-col>
+  </el-row>
+  <div v-if="loading"><br><br></div>
+  <div v-else class="flex stretch wrap">
+    <cardv
+            v-for="user in users.items"
+            :key="user.id"
+    >
+      <el-row class="pull-right" v-if="!currentUser(user)">
+        <el-button  @click="openFormEdit(user)" icon="edit"></el-button>
+        <el-button  @click="openConfirm(user)"   icon="delete"></el-button>
+      </el-row>
+
+      <br><br>
+      <h2 class="cardTitle"> {{ user.firstName }} {{ user.lastName }} </h2>
+      <hr>
+      <label class="cardLabel">Email: </label><span class="cardContent">{{ user.email }}</span>
+      <hr>
+      <label class="cardLabel">TimeZone: </label><span class="cardContent">{{ user.timeZone }}</span>
+    </cardv>
+    <modalFormv
+            :show="showModalEdit"
+            :form.sync="editForm"
+            :cancel-form="cancelFormEdit"
+            :submit="update"
+            :title="titleEdit"
+    >
+    </modalFormv>
+    <modalFormv
+            :show="showModalCreate"
+            :form.sync="form"
+            :cancel-form="cancelFormCreate"
+            :submit="register"
+            :title="titleCreate"
+    >
+    </modalFormv>
+    <el-dialog
+            :visible.sync="dialogFormVisible"
+            size="tiny"
+    >
+      Are you sure to delete the user?
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">Cancel</el-button>
+    <el-button type="primary" @click="destroy">Confirm</el-button>
+  </span>
+    </el-dialog>
+  </div>
+</div>
